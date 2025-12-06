@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% block content %}
+  <div class="card">
+    <a href="{% url 'business_create' %}"><button>Create new Business</button></a>
+  </div>
+  {% for b in businesses %}
+  <div class="card">
+    <h3>{{ b.name }}</h3>
+    <div class="small">GSTIN: {{ b.gstin }} • PAN: {{ b.pan }} • Created: {{ b.created_at }}</div>
+    <div style="margin-top:8px;">
+      <a href="{% url 'business_detail' b.id %}">Open</a> |
+      <a href="{% url 'upload_document' b.id %}">Upload Document</a> |
+      <a href="{% url 'documents_list' b.id %}">Documents ({{ b.documents.count }})</a>
+    </div>
+  </div>
+  {% empty %}
+  <p>No businesses yet.</p>
+  {% endfor %}
+{% endblock %}
