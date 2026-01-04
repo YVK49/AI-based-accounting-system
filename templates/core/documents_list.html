@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+{% block content %}
+  <div class="card">
+    <h2>Documents — {{ business.name }}</h2>
+    {% for d in documents %}
+      <div class="card">
+        <strong>Document {{ d.id }}</strong> • {{ d.doc_type }} • {{ d.uploaded_at }} • Status: {{ d.status }}<br/>
+        <a href="{% url 'document_detail' d.id %}">Open</a>
+      </div>
+    {% empty %}
+      <p>No documents yet.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

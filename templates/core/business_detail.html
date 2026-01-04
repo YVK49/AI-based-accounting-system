@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %}
+{% block content %}
+  <div class="card">
+    <h2>{{ business.name }}</h2>
+    <div class="small">GSTIN: {{ business.gstin }} • PAN: {{ business.pan }}</div>
+    <div style="margin-top:10px;">
+      <a href="{% url 'upload_document' business.id %}"><button>Upload Document</button></a>
+      <a href="{% url 'documents_list' business.id %}"><button>View Documents</button></a>
+    </div>
+  </div>
+{% endblock %}

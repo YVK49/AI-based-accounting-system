@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %}
+{% block content %}
+  <div class="card">
+    <h2>Upload Document for {{ business.name }}</h2>
+    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Upload</button>
+    </form>
+    <p class="small">Supported image types: jpg, png, tiff. PDFs: not automatically OCRed in MVP.</p>
+  </div>
+{% endblock %}
