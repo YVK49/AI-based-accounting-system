@@ -1,21 +1,44 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.validators import RegexValidator, FileExtensionValidator
+from django.utils import timezone
 
 User = get_user_model()
 
+
 class Business(models.Model):
     name = models.CharField(max_length=200)
-    pan = models.CharField(max_length=20, blank=True, null=True)
-    gstin = models.CharField(max_length=20, blank=True, null=True)
+    pan = models.CharField(
+        max_length=20, 
+        blank=True, 
+        null=True,
+        validators=[RegexValidator(r'^[A-Z]{5}[0-9]{4}[A-Z]$', 'Invalid PAN format')]
+    )
+    gstin = models.CharField(
+        max_length=20, 
+        blank=True, 
+        null=True,
+        validators=[RegexValidator(r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$', 'Invalid GSTIN format')]
+    )
     financial_year_start = models.DateField(blank=True, null=True)
-    created_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    created_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='businesses')
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['created_by']),
+            models.Index(fields=['name']),
+        ]
 
     def __str__(self):
         return self.name
 
 
 def upload_to(instance, filename):
+    """
+    Secure file path for document uploads
+    """
     return f"business_{instance.business.id}/documents/{filename}"
 
 
@@ -27,11 +50,21 @@ class Document(models.Model):
     ]
     business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='documents')
     uploaded_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
-    file = models.FileField(upload_to=upload_to)
+    file = models.FileField(
+        upload_to=upload_to,
+        validators=[FileExtensionValidator(allowed_extensions=['pdf','png','jpg','jpeg','bmp','tiff'])]
+    )
     doc_type = models.CharField(max_length=20, choices=DOC_TYPES, default='receipt')
     status = models.CharField(max_length=50, default='uploaded')
     ocr_text = models.TextField(blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-uploaded_at']
+        indexes = [
+            models.Index(fields=['business']),
+            models.Index(fields=['uploaded_by']),
+        ]
 
     def __str__(self):
         return f"Document {self.id} - {self.business.name}"
@@ -48,5 +81,12 @@ class ExtractedLineItem(models.Model):
     ledger_account = models.CharField(max_length=100, blank=True, null=True)
     raw = models.JSONField(default=dict, blank=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['document']),
+            models.Index(fields=['vendor']),
+            models.Index(fields=['invoice_no']),
+        ]
+
     def __str__(self):
-        return f"Line {self.id} ({self.vendor} - {self.amount})"
+        return f"Line {self.id} ({self.vendor or 'Unknown'} - {self.amount or 0})"

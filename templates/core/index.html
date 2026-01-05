@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="card">
-  <a href="{% url 'business_create' %}">
+  <a href="{% url 'core:business_create' %}">
     <button>Create new Business</button>
   </a>
 </div>
@@ -18,9 +18,9 @@
     </div>
 
     <div style="margin-top:8px;">
-      <a href="{% url 'business_detail' b.id %}">Open</a> |
-      <a href="{% url 'upload_document' b.id %}">Upload Document</a> |
-      <a href="{% url 'documents_list' b.id %}">
+      <a href="{% url 'core:business_detail' b.id %}">Open</a> |
+      <a href="{% url 'core:upload_document' b.id %}">Upload Document</a> |
+      <a href="{% url 'core:documents_list' b.id %}">
         Documents ({{ b.documents.count }})
       </a>
     </div>
