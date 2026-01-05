@@ -1,0 +1,30 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="card" style="max-width:400px;margin:auto;">
+    <h2>Login</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <div>
+            <label>Username</label>
+            {{ form.username }}
+        </div>
+
+        <div>
+            <label>Password</label>
+            {{ form.password }}
+        </div>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <p style="margin-top:10px;">
+        Don’t have an account?
+        <a href="{% url 'signup' %}">Sign up</a>
+    </p>
+</div>
+{% endblock %}

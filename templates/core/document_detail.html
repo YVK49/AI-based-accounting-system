@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+{% block content %}
+  <div class="card">
+    <h2>Document {{ doc.id }}</h2>
+    <div class="small">Uploaded: {{ doc.uploaded_at }} • Status: {{ doc.status }}</div>
+    {% if doc.file %}
+      <div style="margin-top:10px;">
+        <p><a href="{{ doc.file.url }}" target="_blank">Download file</a></p>
+      </div>
+    {% endif %}
+    <h3>OCR Text</h3>
+    <pre>{{ doc.ocr_text }}</pre>
+    <h3>Extracted line items (none yet)</h3>
+    {% if lines %}
+      <ul>
+      {% for l in lines %}
+        <li>{{ l.vendor }} — {{ l.amount }}</li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p class="small">No line items extracted in MVP. This will be added in next iteration.</p>
+    {% endif %}
+  </div>
+{% endblock %}
