@@ -9,7 +9,6 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.contrib.auth import authenticate
 
-
 # -------------------- AUTH VIEWS --------------------
 def signup_view(request):
     if request.method == "POST":
@@ -119,3 +118,6 @@ def document_detail(request, pk):
     doc = get_object_or_404(Document, pk=pk, business__created_by=request.user)
     lines = doc.lines.all()
     return render(request, 'core/document_detail.html', {'doc': doc, 'lines': lines})
+
+
+

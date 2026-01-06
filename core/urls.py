@@ -14,7 +14,7 @@ urlpatterns = [
     path('index/', views.index, name='index'),
     path('businesses/new/', views.business_create, name='business_create'),
     path('businesses/<int:pk>/', views.business_detail, name='business_detail'),
-
+    
     # Documents
     path('businesses/<int:business_id>/upload/', views.upload_document, name='upload_document'),
     path('businesses/<int:business_id>/documents/', views.documents_list, name='documents_list'),

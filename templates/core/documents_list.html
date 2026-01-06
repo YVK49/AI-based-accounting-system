@@ -5,7 +5,7 @@
     {% for d in documents %}
       <div class="card">
         <strong>Document {{ d.id }}</strong> • {{ d.doc_type }} • {{ d.uploaded_at }} • Status: {{ d.status }}<br/>
-        <a href="{% url 'document_detail' d.id %}">Open</a>
+        <a href="{% url 'core:document_detail' d.id %}">Open</a>
       </div>
     {% empty %}
       <p>No documents yet.</p>
